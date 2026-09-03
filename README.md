@@ -16,9 +16,9 @@ Do not add a price, a checkout link, or a certification claim to any of these un
 |---|---|---|---|---|
 | `slot-a-top-scraper.html` | A | 970 x 120 | Before the article title | `/learn/reading-risk`, coach framing |
 | `slot-b-sidebar-banner.html` | B | 300 x 600 | Sidebar, top | `/learn/reading-risk`, organizer framing |
-| `slot-c-sidebar-square.html` | C | 300 x 250 | Sidebar, below banner | `/learn/reading-risk` |
+| `slot-c-sidebar-square.html` | C | 340 x 250 | Sidebar, below banner | `/learn/reading-risk` |
 | `slot-d-mid-scraper.html` | D | 970 x 120 | Mid-article, roughly halfway through the content | `/learn/courses/marathon-swimming` |
-| `slot-e-sidebar-square-alt.html` | E | 300 x 250 | Sidebar, in place of C | `/learn/courses/marathon-swimming` |
+| `slot-e-sidebar-square-alt.html` | E | 340 x 250 | Sidebar, in place of C | `/learn/courses/marathon-swimming` |
 | `slot-f-bottom-scraper.html` | F | 970 x 120 | After the article body | `/learn/reading-risk` |
 
 A, D and F split the archive audience by how far they read. A shows before anyone starts, coach-framed, navy treatment, and carries the WOWSA mark. D and F share the same cream, no-mark treatment by design, one wide scraper style used twice: D sits mid-article with the Marathon Swimming course, F runs after the article body with the general-audience Reading Risk offer.
@@ -98,7 +98,7 @@ Georgia and system sans-serif fallbacks are declared but the primary faces are C
 ## Build notes, from the site audit
 
 - The sidebar already runs `theia-sticky-sidebar`, so slot B and any sidebar unit follow the reader down the article at no extra cost, this is the theme's existing behavior and these files don't need to do anything to get it.
-- The sidebar column is `col-md-4`, roughly 300 to 330px usable, so the 300px-wide units fit without scaling.
+- The sidebar column is `col-md-4`. Slots C and E are set to 340px wide with `max-width:100%`, so they fill the column edge-to-edge rather than sitting at the older 300px IAB standard width.
 - Custom HTML widgets are already in use in this sidebar, confirmed by inspecting a live article, so these files drop into an existing widget slot rather than needing a new one.
 
 ## If something needs to change
