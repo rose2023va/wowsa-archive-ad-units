@@ -48,6 +48,7 @@
   .card .letter{font-family:Georgia,serif;font-weight:600;font-size:15px;color:var(--navy);white-space:nowrap}
   .card .offer{font-size:9.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
     color:var(--gold)}
+  .card .placement{font-size:11px;color:var(--muted);line-height:1.4;margin-bottom:12px;min-height:30px}
   .card .count{font-family:Georgia,serif;font-size:34px;font-weight:600;line-height:1;
     font-variant-numeric:tabular-nums;color:var(--navy)}
   .card .last{font-size:11px;color:var(--muted);margin-top:8px}
@@ -56,7 +57,7 @@
   h2{font-family:Georgia,serif;font-weight:600;font-size:17px;margin:0 0 14px;color:var(--navy)}
 
   .bars{display:flex;flex-direction:column;gap:10px}
-  .barrow{display:grid;grid-template-columns:70px 1fr 46px;align-items:center;gap:10px;font-size:12.5px}
+  .barrow{display:grid;grid-template-columns:120px 1fr 46px;align-items:center;gap:10px;font-size:12.5px}
   .barrow .label{font-weight:600;color:var(--navy)}
   .bartrack{background:var(--cream-2);border-radius:3px;height:14px;overflow:hidden}
   .barfill{display:block;background:var(--gold);height:100%;border-radius:3px;min-width:2px;transition:width .4s ease}
@@ -98,6 +99,11 @@
   </section>
 
   <section>
+    <h2>Clicks by day</h2>
+    <div class="bars" id="dayBars"></div>
+  </section>
+
+  <section>
     <h2>Recent clicks</h2>
     <div class="tblwrap">
       <table>
@@ -117,6 +123,14 @@ const SUPABASE_KEY = 'sb_publishable_4HMUAhFvk3Y0fwPZjEnaWw_346P47aJ';
 const SLOTS = ['a','b','c','d','e','f'];
 const OFFER_LABELS = { reading_risk: 'Reading Risk', marathon_swimming: 'Marathon Swimming' };
 const SLOT_OFFER = { a:'reading_risk', b:'reading_risk', c:'reading_risk', d:'marathon_swimming', e:'marathon_swimming', f:'reading_risk' };
+const SLOT_PLACEMENT = {
+  a: 'Before the article title',
+  b: 'Sidebar, top banner',
+  c: 'Sidebar, below the banner',
+  d: 'Mid-article, roughly halfway through',
+  e: 'Sidebar, in place of Slot C',
+  f: 'After the article body'
+};
 
 function timeAgo(iso) {
   const s = Math.floor((Date.now() - new Date(iso).getTime()) / 1000);
@@ -159,6 +173,7 @@ function render(rows) {
         <span class="letter">Slot ${s.toUpperCase()}</span>
         <span class="offer">${OFFER_LABELS[SLOT_OFFER[s]]}</span>
       </div>
+      <div class="placement">${SLOT_PLACEMENT[s]}</div>
       <div class="count">${counts[s]}</div>
       <div class="last">${lastClick[s] ? 'Last click ' + timeAgo(lastClick[s]) : 'No clicks yet'}</div>
     </div>
@@ -173,6 +188,24 @@ function render(rows) {
       <span class="n">${counts[s]}</span>
     </div>
   `).join('');
+
+  const byDay = {};
+  rows.forEach(r => {
+    const day = new Date(r.clicked_at).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
+    byDay[day] = (byDay[day] || 0) + 1;
+  });
+  const days = Object.keys(byDay).sort((a, b) => new Date(b) - new Date(a)).slice(0, 14);
+  const dayMax = Math.max(1, ...days.map(d => byDay[d]));
+  const dayBarsEl = document.getElementById('dayBars');
+  dayBarsEl.innerHTML = days.length === 0
+    ? `<div class="empty">No clicks recorded yet.</div>`
+    : days.map(d => `
+      <div class="barrow">
+        <span class="label">${d}</span>
+        <span class="bartrack"><span class="barfill" style="width:${(byDay[d] / dayMax * 100).toFixed(1)}%"></span></span>
+        <span class="n">${byDay[d]}</span>
+      </div>
+    `).join('');
 
   const recentBody = document.getElementById('recentBody');
   if (rows.length === 0) {
