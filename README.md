@@ -19,17 +19,53 @@ Do not add a price, a checkout link, or a certification claim to any of these un
 | `slot-c-sidebar-square.html` | C | 300 x 250 | Sidebar, below banner | `/learn/reading-risk` |
 | `slot-d-bottom-scraper.html` | D | 970 x 120 | Below the article body | `/learn/courses/marathon-swimming` |
 | `slot-e-sidebar-square-alt.html` | E | 300 x 250 | Sidebar, in place of C | `/learn/reading-risk` |
-| `slot-f-footer-widget.html` | F | Fluid | Footer widget row, alongside "Top Open Water Swimming Books" and "Discover" | `/learn/reading-risk` |
+| `slot-f-footer-widget.html` | F | Fluid | Site footer | `/learn/reading-risk` |
+
+### Preview
+
+Rendered from the actual files, not mockups, so what you see below is what pasting the file produces.
+
+**Slot A**
+<img src="preview/slot-a.png" width="700" alt="Slot A, top scraper">
+
+**Slot B**
+<img src="preview/slot-b.png" width="240" alt="Slot B, sidebar banner">
+
+**Slot C**
+<img src="preview/slot-c.png" width="240" alt="Slot C, sidebar square">
+
+**Slot D**
+<img src="preview/slot-d.png" width="700" alt="Slot D, bottom scraper">
+
+**Slot E**
+<img src="preview/slot-e.png" width="240" alt="Slot E, sidebar square, dark alternate">
+
+**Slot F**
+<img src="preview/slot-f.png" width="240" alt="Slot F, footer">
 
 **Two units per page, not five.** One from the top/bottom scraper pair (A or D) and one from the sidebar (B, C, or E). Running all five on one article crowds the read and trains readers to ignore them. C and E are two visual treatments of the same offer, light and dark, use one or the other in a given sidebar, not both.
 
 All destination URLs were checked live on 3 September 2026 and returned 200.
 
-## Header
+## How to install each file
 
-There is no separate ad-widget slot in the header the way there is in the sidebar and footer. The only header-level mechanism currently live on the site is the **WOWSA Announcement Bar** plugin (`wowsa-announcement-bar`, one bar above the primary navigation, one message at a time). It is currently occupied by the WOWSA Awards 2026 nomination campaign, text "2026 WOWSA Awards nominations are now open," CTA to wowsaawards.com.
+Only the sidebar has a real widget area. There is no widget area in the header or the footer, and no separate "advertising block" anywhere on the site outside the sidebar, that description did not come from anyone who actually built this site.
 
-Using it for Reading Risk would replace that message, not add to it. Before building anything for the header, confirm with Quinn whether the Awards campaign is meant to still be running, and whether the announcement bar is the intended header placement at all, or whether a different header mechanism is wanted.
+**B, C, E, paste into the sidebar.** Content Aware Sidebars is active and already runs Custom HTML widgets there. Paste the file's contents straight into a Custom HTML widget in the relevant sidebar.
+
+**A, D, F need a code snippet, not a widget.** These positions, before the article title, after the article body, and the site footer, have no widget area to paste into. **WPCode Lite is already active on the site**, confirmed 3 September 2026. Use it rather than editing a theme template:
+
+1. In wp-admin, go to **Code Snippets → Add New** (WPCode).
+2. Set the snippet type to **HTML Snippet**.
+3. Paste the full contents of the file.
+4. Set **Insertion → Location → Auto Insert**:
+   - `slot-a-top-scraper.html` → **Insert Before Post**
+   - `slot-d-bottom-scraper.html` → **Insert After Post**
+   - `slot-f-footer-widget.html` → **Site Wide Footer**
+5. Under **Smart Conditional Logic**, restrict all three (A, D, and F) to **Posts, Pages, and Coaches** only, and explicitly exclude the homepage. None of these three should ever show on the homepage, only on individual posts, pages, and coach profiles. For A and D specifically, this also solves a second problem: without a Single Post restriction, "Before Post" and "After Post" can fire once per item on category and archive listing pages, repeating the unit down the page instead of showing it once on the article.
+6. Save as inactive first, preview on one live post, page, and coach profile, then activate.
+
+This uses WPCode's own insertion logic rather than a hand-written theme hook, so there is no guessing at which template file or action name this specific theme uses.
 
 ## Rollout order
 
