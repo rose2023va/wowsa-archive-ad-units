@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>WOWSA Archive Ad Clicks</title>
+<meta name="robots" content="noindex">
+<style>
+  :root{
+    --navy:#0C2650;
+    --navy-2:#112140;
+    --cream:#FAF7F2;
+    --cream-2:#DDD9CF;
+    --gold:#B5925C;
+    --gold-2:#EDDCBD;
+    --muted:#5E6572;
+    --good:#1D8A6B;
+    --line:#E4E0D6;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--cream);
+    color:var(--navy);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    padding:32px 20px 64px;
+  }
+  .wrap{max-width:1040px;margin:0 auto}
+  header{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap;
+    padding-bottom:22px;border-bottom:1px solid var(--cream-2);margin-bottom:28px}
+  h1{font-family:Georgia,"Times New Roman",serif;font-weight:600;font-size:30px;margin:0 0 6px;
+    letter-spacing:-.01em;color:var(--navy)}
+  .sub{font-size:13.5px;color:var(--muted);margin:0}
+  .meta{text-align:right;font-size:12px;color:var(--muted)}
+  .meta .dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--good);
+    margin-right:6px;vertical-align:middle}
+  button{font:inherit;font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;
+    background:var(--navy);color:var(--cream);border:none;padding:9px 16px;border-radius:3px;
+    cursor:pointer;margin-top:8px}
+  button:hover{background:var(--navy-2)}
+  button:disabled{opacity:.5;cursor:default}
+
+  .cards{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:32px}
+  @media (max-width:860px){.cards{grid-template-columns:repeat(3,1fr)}}
+  @media (max-width:520px){.cards{grid-template-columns:repeat(2,1fr)}}
+  .card{background:#fff;border:1px solid var(--cream-2);border-radius:4px;padding:16px 14px}
+  .card .slot{display:flex;flex-direction:column;gap:5px;margin-bottom:10px}
+  .card .letter{font-family:Georgia,serif;font-weight:600;font-size:15px;color:var(--navy);white-space:nowrap}
+  .card .offer{font-size:9.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
+    color:var(--gold)}
+  .card .count{font-family:Georgia,serif;font-size:34px;font-weight:600;line-height:1;
+    font-variant-numeric:tabular-nums;color:var(--navy)}
+  .card .last{font-size:11px;color:var(--muted);margin-top:8px}
+
+  section{margin-bottom:32px}
+  h2{font-family:Georgia,serif;font-weight:600;font-size:17px;margin:0 0 14px;color:var(--navy)}
+
+  .bars{display:flex;flex-direction:column;gap:10px}
+  .barrow{display:grid;grid-template-columns:70px 1fr 46px;align-items:center;gap:10px;font-size:12.5px}
+  .barrow .label{font-weight:600;color:var(--navy)}
+  .bartrack{background:var(--cream-2);border-radius:3px;height:14px;overflow:hidden}
+  .barfill{display:block;background:var(--gold);height:100%;border-radius:3px;min-width:2px;transition:width .4s ease}
+  .barrow .n{text-align:right;font-variant-numeric:tabular-nums;color:var(--muted)}
+
+  table{width:100%;border-collapse:collapse;font-size:12.5px}
+  thead th{text-align:left;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;
+    color:var(--muted);font-weight:600;padding:0 10px 8px;border-bottom:1px solid var(--cream-2)}
+  tbody td{padding:9px 10px;border-bottom:1px solid var(--line);color:var(--navy)}
+  tbody tr:last-child td{border-bottom:none}
+  .tag{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.03em;
+    padding:2px 7px;border-radius:10px;background:var(--gold-2);color:#7A5B2E}
+  .tblwrap{overflow-x:auto;background:#fff;border:1px solid var(--cream-2);border-radius:4px}
+  .empty{padding:28px;text-align:center;color:var(--muted);font-size:13px}
+  .err{padding:14px 16px;background:#FBE9E7;border:1px solid #E7B4AC;color:#8A3A2E;border-radius:4px;
+    font-size:13px;margin-bottom:24px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>Archive Ad Clicks</h1>
+      <p class="sub">Live click counts for the six WOWSA archive promotion units (A&ndash;F). Data logs the moment someone clicks, before the destination opens.</p>
+    </div>
+    <div class="meta">
+      <div><span class="dot" id="statusDot"></span><span id="statusText">Loading&hellip;</span></div>
+      <button id="refreshBtn">Refresh now</button>
+    </div>
+  </header>
+
+  <div id="errorBox"></div>
+
+  <div class="cards" id="cards"></div>
+
+  <section>
+    <h2>Clicks by slot</h2>
+    <div class="bars" id="bars"></div>
+  </section>
+
+  <section>
+    <h2>Recent clicks</h2>
+    <div class="tblwrap">
+      <table>
+        <thead>
+          <tr><th>When</th><th>Slot</th><th>Offer</th><th>Clicked from</th></tr>
+        </thead>
+        <tbody id="recentBody"></tbody>
+      </table>
+    </div>
+  </section>
+</div>
+
+<script>
+const SUPABASE_URL = 'https://aqblfxiehnezmjsxpkrz.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_4HMUAhFvk3Y0fwPZjEnaWw_346P47aJ';
+
+const SLOTS = ['a','b','c','d','e','f'];
+const OFFER_LABELS = { reading_risk: 'Reading Risk', marathon_swimming: 'Marathon Swimming' };
+const SLOT_OFFER = { a:'reading_risk', b:'reading_risk', c:'reading_risk', d:'marathon_swimming', e:'marathon_swimming', f:'reading_risk' };
+
+function timeAgo(iso) {
+  const s = Math.floor((Date.now() - new Date(iso).getTime()) / 1000);
+  if (s < 60) return 'just now';
+  if (s < 3600) return Math.floor(s / 60) + 'm ago';
+  if (s < 86400) return Math.floor(s / 3600) + 'h ago';
+  return Math.floor(s / 86400) + 'd ago';
+}
+
+function fmtWhen(iso) {
+  const d = new Date(iso);
+  return d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) + ', ' +
+    d.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' });
+}
+
+async function fetchClicks() {
+  const res = await fetch(
+    SUPABASE_URL + '/rest/v1/ad_clicks?select=*&order=clicked_at.desc&limit=500',
+    { headers: { apikey: SUPABASE_KEY } }
+  );
+  if (!res.ok) throw new Error('Request failed (' + res.status + ')');
+  return res.json();
+}
+
+function render(rows) {
+  const counts = {}, lastClick = {};
+  SLOTS.forEach(s => { counts[s] = 0; lastClick[s] = null; });
+  rows.forEach(r => {
+    if (counts[r.slot] === undefined) return;
+    counts[r.slot]++;
+    if (!lastClick[r.slot] || new Date(r.clicked_at) > new Date(lastClick[r.slot])) {
+      lastClick[r.slot] = r.clicked_at;
+    }
+  });
+
+  const cardsEl = document.getElementById('cards');
+  cardsEl.innerHTML = SLOTS.map(s => `
+    <div class="card">
+      <div class="slot">
+        <span class="letter">Slot ${s.toUpperCase()}</span>
+        <span class="offer">${OFFER_LABELS[SLOT_OFFER[s]]}</span>
+      </div>
+      <div class="count">${counts[s]}</div>
+      <div class="last">${lastClick[s] ? 'Last click ' + timeAgo(lastClick[s]) : 'No clicks yet'}</div>
+    </div>
+  `).join('');
+
+  const max = Math.max(1, ...SLOTS.map(s => counts[s]));
+  const barsEl = document.getElementById('bars');
+  barsEl.innerHTML = SLOTS.map(s => `
+    <div class="barrow">
+      <span class="label">Slot ${s.toUpperCase()}</span>
+      <span class="bartrack"><span class="barfill" style="width:${(counts[s] / max * 100).toFixed(1)}%"></span></span>
+      <span class="n">${counts[s]}</span>
+    </div>
+  `).join('');
+
+  const recentBody = document.getElementById('recentBody');
+  if (rows.length === 0) {
+    recentBody.innerHTML = `<tr><td colspan="4" class="empty">No clicks recorded yet.</td></tr>`;
+  } else {
+    recentBody.innerHTML = rows.slice(0, 50).map(r => `
+      <tr>
+        <td>${fmtWhen(r.clicked_at)}</td>
+        <td><span class="tag">${(r.slot || '?').toUpperCase()}</span></td>
+        <td>${OFFER_LABELS[r.offer] || r.offer}</td>
+        <td>${r.page_url ? escapeHtml(shortenUrl(r.page_url)) : '&mdash;'}</td>
+      </tr>
+    `).join('');
+  }
+}
+
+function shortenUrl(u) {
+  try {
+    const url = new URL(u);
+    return url.pathname + url.search;
+  } catch (e) {
+    return u;
+  }
+}
+
+function escapeHtml(s) {
+  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+let loading = false;
+async function refresh() {
+  if (loading) return;
+  loading = true;
+  const btn = document.getElementById('refreshBtn');
+  const statusDot = document.getElementById('statusDot');
+  const statusText = document.getElementById('statusText');
+  btn.disabled = true;
+  try {
+    const rows = await fetchClicks();
+    render(rows);
+    document.getElementById('errorBox').innerHTML = '';
+    statusDot.style.background = '#1D8A6B';
+    statusText.textContent = 'Updated ' + new Date().toLocaleTimeString();
+  } catch (err) {
+    statusDot.style.background = '#C0392B';
+    statusText.textContent = 'Update failed';
+    document.getElementById('errorBox').innerHTML =
+      `<div class="err">Could not load click data: ${escapeHtml(err.message)}. Try refreshing.</div>`;
+  } finally {
+    btn.disabled = false;
+    loading = false;
+  }
+}
+
+document.getElementById('refreshBtn').addEventListener('click', refresh);
+refresh();
+setInterval(refresh, 60000);
+</script>
+</body>
+</html>

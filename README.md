@@ -83,7 +83,7 @@ Every file carries a small inline script and an `onclick` handler on the ad link
 
 On click, each unit sends one row (slot, offer, destination, the page it was clicked from, and a timestamp) to a Supabase table (`ad_clicks` in the WOWSA Learn/Directory project) using a public, write-only-by-design key. That key is safe to expose in client-side code, Supabase enforces what it's allowed to do through row-level security, not by keeping the key secret. The table accepts inserts from anyone and allows reads, nothing else.
 
-A live dashboard reading that table: [link added once published]
+A live dashboard reading that table: https://rose2023va.github.io/wowsa-archive-ad-units/ (updates every 60 seconds, also has a manual refresh button, no login needed).
 
 If a file's copy or destination changes, update the matching values inside its `wowsaTrackAdClick(...)` call too, otherwise the click gets logged under the old offer name or destination.
 
