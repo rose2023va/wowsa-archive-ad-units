@@ -1,0 +1,50 @@
+<!--
+  WOWSA archive promotion, Slot B: long sidebar banner.
+  300 x 600, sits at the top of the sidebar. Sticky by inheritance if the
+  theme's sidebar already uses theia-sticky-sidebar, no change needed here.
+  Reading Risk, framed for organizers.
+  See README.md in this repo before editing.
+-->
+<style>
+.wowsa-promo-b{font-family:"Karla",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;box-sizing:border-box}
+.wowsa-promo-b *{box-sizing:border-box}
+.wowsa-promo-b .ad{display:flex;flex-direction:column;min-height:540px;height:auto;
+  padding:clamp(20px,4%,26px) clamp(18px,6%,24px);background:#0C2650;color:#FAF7F2;
+  text-decoration:none;width:300px;max-width:100%}
+.wowsa-promo-b .sealbox{display:flex;justify-content:center;padding:2px 0 6px}
+.wowsa-promo-b .mark{display:block;flex:none;width:clamp(104px,46%,150px);aspect-ratio:1;
+  background-color:#FFFFFF;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;
+  -webkit-mask-position:center;mask-position:center;-webkit-mask-size:contain;mask-size:contain;
+  -webkit-mask-image:url(https://www.openwaterswimming.com/wp-content/uploads/2023/07/wowsa-white-logo.png);
+  mask-image:url(https://www.openwaterswimming.com/wp-content/uploads/2023/07/wowsa-white-logo.png);
+  opacity:.9}
+.wowsa-promo-b .urg{display:inline-block;font-size:10px;font-weight:600;letter-spacing:.18em;
+  text-transform:uppercase;color:#B5925C;padding:0;border-bottom:1px solid #B5925C;padding-bottom:4px}
+.wowsa-promo-b .h{font-family:"Cormorant Garamond",Georgia,"Times New Roman",serif;font-weight:600;
+  letter-spacing:-.01em;line-height:1.1;font-size:clamp(24px,2.2vw,30px);margin:11px 0 0;color:#FAF7F2}
+.wowsa-promo-b .s{font-size:12px;line-height:1.5;opacity:.8;margin-top:9px}
+.wowsa-promo-b .goldrule{height:1px;background:#B5925C;opacity:.55;margin:18px 0 14px}
+.wowsa-promo-b .tick{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700;
+  letter-spacing:.08em;text-transform:uppercase;color:#FAF7F2;margin-bottom:10px}
+.wowsa-promo-b .tick:last-of-type{margin-bottom:auto}
+.wowsa-promo-b .tick i{width:15px;height:15px;border-radius:50%;border:1.5px solid #B5925C;flex:none;position:relative}
+.wowsa-promo-b .tick i:after{content:"";position:absolute;left:4px;top:6px;width:5px;height:2.5px;
+  border-left:1.5px solid #B5925C;border-bottom:1.5px solid #B5925C;transform:rotate(-45deg)}
+.wowsa-promo-b .btn{display:block;text-align:center;background:#B5925C;color:#fff;font-size:11px;
+  font-weight:600;letter-spacing:.14em;text-transform:uppercase;padding:13px 22px;text-decoration:none;
+  border-radius:2px;margin-top:18px}
+</style>
+<div class="wowsa-promo-b">
+  <a class="ad" href="https://www.openwaterswimming.com/learn/reading-risk">
+    <div class="sealbox"><span class="mark" role="img" aria-label="World Open Water Swimming Association"></span></div>
+    <div>
+      <span class="urg">Free email series</span>
+      <div class="h">How experienced organizers read changing conditions</div>
+      <div class="s">Reading Risk, WOWSA's shared framework for judgment before, during and after an event.</div>
+    </div>
+    <div class="goldrule"></div>
+    <div class="tick"><i></i>Assess, brief, position</div>
+    <div class="tick"><i></i>Monitor, decide, document</div>
+    <span class="btn">Start the series</span>
+  </a>
+</div>
