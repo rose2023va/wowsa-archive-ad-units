@@ -17,13 +17,13 @@ Do not add a price, a checkout link, or a certification claim to any of these un
 | `slot-a-top-scraper.html` | A | 970 x 120 | Before the article title | `/learn/reading-risk`, coach framing |
 | `slot-b-sidebar-banner.html` | B | 300 x 600 | Sidebar, top | `/learn/reading-risk`, organizer framing |
 | `slot-c-sidebar-square.html` | C | 300 x 250 | Sidebar, below banner | `/learn/reading-risk` |
-| `slot-d-bottom-scraper.html` | D | 970 x 120 | After the article body | `/learn/courses/marathon-swimming` |
+| `slot-d-mid-scraper.html` | D | 970 x 120 | Mid-article, roughly halfway through the content | `/learn/courses/marathon-swimming` |
 | `slot-e-sidebar-square-alt.html` | E | 300 x 250 | Sidebar, in place of C | `/learn/reading-risk` |
-| `slot-f-mid-scraper.html` | F | 970 x 120 | Mid-article, roughly halfway through the content | `/learn/reading-risk` |
+| `slot-f-bottom-scraper.html` | F | 970 x 120 | After the article body | `/learn/reading-risk` |
 
-A, D and F split the archive audience by how far they read. A shows before anyone starts, so it carries the broadest, coach-framed hook. F sits mid-article, where the general readership is still on the page, so it repeats the Reading Risk offer in plainer, audience-agnostic language. D runs after the article body, where only readers who finished the piece remain, so it carries the more involved offer, the free Marathon Swimming course, aimed at people serious enough to read to the end.
+A, D and F split the archive audience by how far they read. A shows before anyone starts, coach-framed, navy treatment, and carries the WOWSA mark. D and F share the same cream, no-mark treatment by design, one wide scraper style used twice: D sits mid-article with the Marathon Swimming course, F runs after the article body with the general-audience Reading Risk offer.
 
-**Why "Free download" on some units and "Get free access" on others:** readers get an immediate downloadable asset first, the email series that follows starts after that. "Free download" describes that first-touch deliverable accurately, it is not describing the whole series. The two phrasings are split across units that could plausibly appear on the same page together (A pairs with F, F pairs with D) specifically so the same page never shows the identical button twice.
+**CTA copy, by what actually happens when you click:** A and F both lead to Reading Risk, where readers get an immediate downloadable asset first, the email series that follows starts after that. "Free download" (A) describes that first-touch deliverable accurately, it is not describing the whole series. "Get free access" (F) is the same offer worded differently, so the two units don't show an identical button when they land on the same page together. D leads to the Marathon Swimming course, which requires signing in and enrolling, not downloading anything, so it says "Enroll for free" instead, matching what the destination page actually asks the reader to do.
 
 ### Preview
 
@@ -39,13 +39,13 @@ Rendered from the actual files, not mockups, so what you see below is what pasti
 <img src="preview/slot-c.png" width="240" alt="Slot C, sidebar square">
 
 **Slot D**
-<img src="preview/slot-d.png" width="700" alt="Slot D, bottom scraper">
+<img src="preview/slot-d.png" width="700" alt="Slot D, mid-article scraper">
 
 **Slot E**
 <img src="preview/slot-e.png" width="240" alt="Slot E, sidebar square, dark alternate">
 
 **Slot F**
-<img src="preview/slot-f.png" width="700" alt="Slot F, mid-article scraper">
+<img src="preview/slot-f.png" width="700" alt="Slot F, after-content scraper">
 
 **A, D and F run together automatically, plus one sidebar unit.** They sit at three different points in the same article (before, middle, after) via WPCode, so all three can appear on one page at once, that is by design, not an oversight. Add one sidebar unit (B, C, or E) on top of that. C and E are two visual treatments of the same offer, light and dark, use one or the other in a given sidebar, not both.
 
@@ -64,9 +64,9 @@ Only the sidebar has a real widget area. There is no widget area in the header o
 3. Paste the full contents of the file.
 4. Set **Insertion → Location → Auto Insert**:
    - `slot-a-top-scraper.html` → **Insert Before Post**
-   - `slot-f-mid-scraper.html` → **Insert Into Post Content**, positioned roughly halfway through (WPCode offers this as an after-paragraph-number or percentage-through-content option, pick whichever lands closest to the midpoint)
-   - `slot-d-bottom-scraper.html` → **Insert After Post**
-5. Under **Smart Conditional Logic**, restrict all three (A, F, and D) to **Posts, Pages, and Coaches** only, and explicitly exclude the homepage. None of these three should ever show on the homepage, only on individual posts, pages, and coach profiles. For A and D specifically, this also solves a second problem: without a Single Post restriction, "Before Post" and "After Post" can fire once per item on category and archive listing pages, repeating the unit down the page instead of showing it once on the article.
+   - `slot-d-mid-scraper.html` → **Insert Into Post Content**, positioned roughly halfway through (WPCode offers this as an after-paragraph-number or percentage-through-content option, pick whichever lands closest to the midpoint)
+   - `slot-f-bottom-scraper.html` → **Insert After Post**
+5. Under **Smart Conditional Logic**, restrict all three (A, D, and F) to **Posts, Pages, and Coaches** only, and explicitly exclude the homepage. None of these three should ever show on the homepage, only on individual posts, pages, and coach profiles. For A and F specifically, this also solves a second problem: without a Single Post restriction, "Before Post" and "After Post" can fire once per item on category and archive listing pages, repeating the unit down the page instead of showing it once on the article.
 6. Save as inactive first, preview on one live post, page, and coach profile, then activate.
 
 This uses WPCode's own insertion logic rather than a hand-written theme hook, so there is no guessing at which template file or action name this specific theme uses.
@@ -83,13 +83,13 @@ These are live markup, not exported banners. Copy, the destination link, or the 
 
 ## The mark
 
-Slots A, B, C and F carry the WOWSA association mark, applied as a CSS mask so it can be tinted to whatever color the unit needs, white on the navy units, navy on the cream one, from a single source image:
+Slots A, B and C carry the WOWSA association mark, applied as a CSS mask so it can be tinted to whatever color the unit needs, white on the navy units, navy on the cream one, from a single source image:
 
 ```
 https://www.openwaterswimming.com/wp-content/uploads/2023/07/wowsa-white-logo.png
 ```
 
-This file is already live in the WordPress media library, confirmed byte-identical to the asset used in the approved mockup. No certification seal appears anywhere in this set, because none of these units are selling a certification right now. Slots D and E carry no mark at all, D because a free course carries no certification claim, E because it repeats slot C's offer in a different treatment.
+This file is already live in the WordPress media library, confirmed byte-identical to the asset used in the approved mockup. No certification seal appears anywhere in this set, because none of these units are selling a certification right now. Slots D, E and F carry no mark at all: D and F share a plainer, mark-free cream treatment by design, E repeats slot C's offer in a different color treatment.
 
 ## Fonts
 
