@@ -1,6 +1,6 @@
 # WOWSA Archive Promotion Units
 
-Five ready-to-paste HTML files for the WordPress article archive ad positions. Each file is self-contained: inline `<style>` scoped to a unique wrapper class, no build step, no external CSS or JS. Paste the whole file's contents into the existing Custom HTML widget for that position.
+Six ready-to-paste HTML files for the WordPress article archive ad positions, sidebar, scraper and footer. Each file is self-contained: inline `<style>` scoped to a unique wrapper class, no build step, no external CSS or JS. Paste the whole file's contents into the existing Custom HTML widget for that position.
 
 Approved design (navy `#0C2650`, ivory `#FAF7F2`, gold `#B5925C`, Cormorant Garamond over Karla), confirmed live and unchanged as of 3 September 2026. Full mockup and design rationale: https://claude.ai/code/artifact/7699c4ed-9536-41c5-b73e-a321fc775f8b
 
@@ -10,7 +10,7 @@ As of 3 September 2026, every unit leads to email capture. None link to a paid c
 
 Do not add a price, a checkout link, or a certification claim to any of these units without checking that this strategy is still current.
 
-## The five files
+## The six files
 
 | File | Slot | Size | Where | Destination |
 |---|---|---|---|---|
@@ -19,10 +19,17 @@ Do not add a price, a checkout link, or a certification claim to any of these un
 | `slot-c-sidebar-square.html` | C | 300 x 250 | Sidebar, below banner | `/learn/reading-risk` |
 | `slot-d-bottom-scraper.html` | D | 970 x 120 | Below the article body | `/learn/courses/marathon-swimming` |
 | `slot-e-sidebar-square-alt.html` | E | 300 x 250 | Sidebar, in place of C | `/learn/reading-risk` |
+| `slot-f-footer-widget.html` | F | Fluid | Footer widget row, alongside "Top Open Water Swimming Books" and "Discover" | `/learn/reading-risk` |
 
 **Two units per page, not five.** One from the top/bottom scraper pair (A or D) and one from the sidebar (B, C, or E). Running all five on one article crowds the read and trains readers to ignore them. C and E are two visual treatments of the same offer, light and dark, use one or the other in a given sidebar, not both.
 
 All destination URLs were checked live on 3 September 2026 and returned 200.
+
+## Header
+
+There is no separate ad-widget slot in the header the way there is in the sidebar and footer. The only header-level mechanism currently live on the site is the **WOWSA Announcement Bar** plugin (`wowsa-announcement-bar`, one bar above the primary navigation, one message at a time). It is currently occupied by the WOWSA Awards 2026 nomination campaign, text "2026 WOWSA Awards nominations are now open," CTA to wowsaawards.com.
+
+Using it for Reading Risk would replace that message, not add to it. Before building anything for the header, confirm with Quinn whether the Awards campaign is meant to still be running, and whether the announcement bar is the intended header placement at all, or whether a different header mechanism is wanted.
 
 ## Rollout order
 
