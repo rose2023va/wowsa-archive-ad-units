@@ -77,6 +77,16 @@ This uses WPCode's own insertion logic rather than a hand-written theme hook, so
 2. **Conditional by category next.** Coach-tagged and profile pages get the coach-framed unit (A or B's coach copy), event and race pages get the organizer framing, safety and conditions pages get slot C or E.
 3. **In-content snippets last.** Add A, F, and D as WPCode snippets on the highest-traffic 100 pages, which carry about half of all archive clicks. Highest effort, highest return, do it last.
 
+## Click tracking
+
+Every file carries a small inline script and an `onclick` handler on the ad link, added so individual click counts per slot can actually be measured. It does not change how the ad looks, behaves, or where it links, it just logs the click in the background before the new tab opens.
+
+On click, each unit sends one row (slot, offer, destination, the page it was clicked from, and a timestamp) to a Supabase table (`ad_clicks` in the WOWSA Learn/Directory project) using a public, write-only-by-design key. That key is safe to expose in client-side code, Supabase enforces what it's allowed to do through row-level security, not by keeping the key secret. The table accepts inserts from anyone and allows reads, nothing else.
+
+A live dashboard reading that table: [link added once published]
+
+If a file's copy or destination changes, update the matching values inside its `wowsaTrackAdClick(...)` call too, otherwise the click gets logged under the old offer name or destination.
+
 ## Why HTML and CSS, not images
 
 These are live markup, not exported banners. Copy, the destination link, or the price framing can change without new artwork. Each file's CSS is scoped under a unique wrapper class (`.wowsa-promo-a`, `.wowsa-promo-b`, etc.) specifically so it cannot collide with the Wilcity theme's own styles when pasted into a live widget. Do not remove the wrapper class or the scoping, and do not rename the classes to something shorter or more generic.

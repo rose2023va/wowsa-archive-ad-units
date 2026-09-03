@@ -21,8 +21,22 @@
   letter-spacing:.14em;text-transform:uppercase;padding:13px 22px;text-decoration:none;
   white-space:nowrap;border-radius:2px;flex:none}
 </style>
+<script>
+function wowsaTrackAdClick(slot, offer, destination) {
+  try {
+    fetch('https://aqblfxiehnezmjsxpkrz.supabase.co/rest/v1/ad_clicks', {
+      method: 'POST',
+      headers: {
+        'apikey': 'sb_publishable_4HMUAhFvk3Y0fwPZjEnaWw_346P47aJ',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ slot: slot, offer: offer, destination: destination, page_url: location.href })
+    });
+  } catch (e) {}
+}
+</script>
 <div class="wowsa-promo-f">
-  <a class="ad" href="https://www.openwaterswimming.com/learn/reading-risk" target="_blank" rel="noopener noreferrer">
+  <a class="ad" href="https://www.openwaterswimming.com/learn/reading-risk" target="_blank" rel="noopener noreferrer" onclick="wowsaTrackAdClick('f','reading_risk','/learn/reading-risk')">
     <div class="grow">
       <div class="kick">Free access</div>
       <div class="h">How experienced swimmers read changing conditions</div>
