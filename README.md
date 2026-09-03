@@ -18,12 +18,12 @@ Do not add a price, a checkout link, or a certification claim to any of these un
 | `slot-b-sidebar-banner.html` | B | 300 x 600 | Sidebar, top | `/learn/reading-risk`, organizer framing |
 | `slot-c-sidebar-square.html` | C | 300 x 250 | Sidebar, below banner | `/learn/reading-risk` |
 | `slot-d-mid-scraper.html` | D | 970 x 120 | Mid-article, roughly halfway through the content | `/learn/courses/marathon-swimming` |
-| `slot-e-sidebar-square-alt.html` | E | 300 x 250 | Sidebar, in place of C | `/learn/reading-risk` |
+| `slot-e-sidebar-square-alt.html` | E | 300 x 250 | Sidebar, in place of C | `/learn/courses/marathon-swimming` |
 | `slot-f-bottom-scraper.html` | F | 970 x 120 | After the article body | `/learn/reading-risk` |
 
 A, D and F split the archive audience by how far they read. A shows before anyone starts, coach-framed, navy treatment, and carries the WOWSA mark. D and F share the same cream, no-mark treatment by design, one wide scraper style used twice: D sits mid-article with the Marathon Swimming course, F runs after the article body with the general-audience Reading Risk offer.
 
-**CTA copy, by what actually happens when you click:** A and F both lead to Reading Risk, where readers get an immediate downloadable asset first, the email series that follows starts after that. "Free download" (A) describes that first-touch deliverable accurately, it is not describing the whole series. "Get free access" (F) is the same offer worded differently, so the two units don't show an identical button when they land on the same page together. D leads to the Marathon Swimming course, which requires signing in and enrolling, not downloading anything, so it says "Enroll for free" instead, matching what the destination page actually asks the reader to do.
+**CTA copy, by what actually happens when you click:** A and F both lead to Reading Risk, where readers get an immediate downloadable asset first, the email series that follows starts after that. "Free download" (A) describes that first-touch deliverable accurately, it is not describing the whole series. "Get free access" (F) is the same offer worded differently, so the two units don't show an identical button when they land on the same page together. D and E both lead to the Marathon Swimming course, which requires signing in and enrolling, not downloading anything, so both say "Enroll for free" instead, matching what the destination page actually asks the reader to do.
 
 ### Preview
 
@@ -42,12 +42,12 @@ Rendered from the actual files, not mockups, so what you see below is what pasti
 <img src="preview/slot-d.png" width="700" alt="Slot D, mid-article scraper">
 
 **Slot E**
-<img src="preview/slot-e.png" width="240" alt="Slot E, sidebar square, dark alternate">
+<img src="preview/slot-e.png" width="240" alt="Slot E, sidebar square, Marathon Swimming">
 
 **Slot F**
 <img src="preview/slot-f.png" width="700" alt="Slot F, after-content scraper">
 
-**A, D and F run together automatically, plus one sidebar unit.** They sit at three different points in the same article (before, middle, after) via WPCode, so all three can appear on one page at once, that is by design, not an oversight. Add one sidebar unit (B, C, or E) on top of that. C and E are two visual treatments of the same offer, light and dark, use one or the other in a given sidebar, not both.
+**A, D and F run together automatically, plus one sidebar unit.** They sit at three different points in the same article (before, middle, after) via WPCode, so all three can appear on one page at once, that is by design, not an oversight. Add one sidebar unit (B, C, or E) on top of that, not more than one. C and E used to be two treatments of the same Reading Risk offer, they now carry different offers (C is Reading Risk, E is Marathon Swimming), deliberately, so the sidebar doesn't just repeat whatever Reading Risk unit is already running elsewhere on the page.
 
 All destination URLs were checked live on 3 September 2026 and returned 200.
 
