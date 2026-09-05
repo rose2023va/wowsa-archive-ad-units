@@ -103,17 +103,6 @@
     <div class="bars" id="dayBars"></div>
   </section>
 
-  <section>
-    <h2>Recent clicks</h2>
-    <div class="tblwrap">
-      <table>
-        <thead>
-          <tr><th>When</th><th>Slot</th><th>Offer</th><th>Clicked from</th></tr>
-        </thead>
-        <tbody id="recentBody"></tbody>
-      </table>
-    </div>
-  </section>
 </div>
 
 <script>
@@ -140,30 +129,31 @@ function timeAgo(iso) {
   return Math.floor(s / 86400) + 'd ago';
 }
 
-function fmtWhen(iso) {
-  const d = new Date(iso);
-  return d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) + ', ' +
-    d.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' });
-}
-
-async function fetchClicks() {
-  const res = await fetch(
-    SUPABASE_URL + '/rest/v1/ad_clicks?select=*&order=clicked_at.desc&limit=500',
-    { headers: { apikey: SUPABASE_KEY } }
-  );
+// Reads two aggregate views rather than the ad_clicks table. Individual click
+// rows carry a referrer and are readable only by signed in review staff.
+async function fetchOne(path) {
+  const res = await fetch(SUPABASE_URL + '/rest/v1/' + path, {
+    headers: { apikey: SUPABASE_KEY }
+  });
   if (!res.ok) throw new Error('Request failed (' + res.status + ')');
   return res.json();
 }
 
-function render(rows) {
+async function fetchSummary() {
+  const [bySlot, byDay] = await Promise.all([
+    fetchOne('ad_click_totals_by_slot?select=slot,clicks,last_click'),
+    fetchOne('ad_click_totals_by_day?select=day,clicks&order=day.desc&limit=14')
+  ]);
+  return { bySlot, byDay };
+}
+
+function render(summary) {
   const counts = {}, lastClick = {};
   SLOTS.forEach(s => { counts[s] = 0; lastClick[s] = null; });
-  rows.forEach(r => {
+  summary.bySlot.forEach(r => {
     if (counts[r.slot] === undefined) return;
-    counts[r.slot]++;
-    if (!lastClick[r.slot] || new Date(r.clicked_at) > new Date(lastClick[r.slot])) {
-      lastClick[r.slot] = r.clicked_at;
-    }
+    counts[r.slot] = r.clicks;
+    lastClick[r.slot] = r.last_click;
   });
 
   const cardsEl = document.getElementById('cards');
@@ -190,11 +180,12 @@ function render(rows) {
   `).join('');
 
   const byDay = {};
-  rows.forEach(r => {
-    const day = new Date(r.clicked_at).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
-    byDay[day] = (byDay[day] || 0) + 1;
+  summary.byDay.forEach(r => {
+    const label = new Date(r.day + 'T00:00:00Z')
+      .toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric', timeZone: 'UTC' });
+    byDay[label] = r.clicks;
   });
-  const days = Object.keys(byDay).sort((a, b) => new Date(b) - new Date(a)).slice(0, 14);
+  const days = Object.keys(byDay);
   const dayMax = Math.max(1, ...days.map(d => byDay[d]));
   const dayBarsEl = document.getElementById('dayBars');
   dayBarsEl.innerHTML = days.length === 0
@@ -207,28 +198,6 @@ function render(rows) {
       </div>
     `).join('');
 
-  const recentBody = document.getElementById('recentBody');
-  if (rows.length === 0) {
-    recentBody.innerHTML = `<tr><td colspan="4" class="empty">No clicks recorded yet.</td></tr>`;
-  } else {
-    recentBody.innerHTML = rows.slice(0, 50).map(r => `
-      <tr>
-        <td>${fmtWhen(r.clicked_at)}</td>
-        <td><span class="tag">${(r.slot || '?').toUpperCase()}</span></td>
-        <td>${OFFER_LABELS[r.offer] || r.offer}</td>
-        <td>${r.page_url ? escapeHtml(shortenUrl(r.page_url)) : '&mdash;'}</td>
-      </tr>
-    `).join('');
-  }
-}
-
-function shortenUrl(u) {
-  try {
-    const url = new URL(u);
-    return url.pathname + url.search;
-  } catch (e) {
-    return u;
-  }
 }
 
 function escapeHtml(s) {
@@ -244,8 +213,8 @@ async function refresh() {
   const statusText = document.getElementById('statusText');
   btn.disabled = true;
   try {
-    const rows = await fetchClicks();
-    render(rows);
+    const summary = await fetchSummary();
+    render(summary);
     document.getElementById('errorBox').innerHTML = '';
     statusDot.style.background = '#1D8A6B';
     statusText.textContent = 'Updated ' + new Date().toLocaleTimeString();
