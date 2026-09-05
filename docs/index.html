@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>WOWSA Archive Ad Clicks</title>
 <meta name="robots" content="noindex">
+<meta http-equiv="cache-control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="pragma" content="no-cache">
+<meta http-equiv="expires" content="0">
 <style>
   :root{
     --navy:#0C2650;
@@ -131,7 +134,7 @@ function timeAgo(iso) {
 // Reads aggregate counts from the tracking Worker. The endpoint returns totals
 // only, never individual rows, so no referrer is ever served publicly.
 async function fetchSummary() {
-  const res = await fetch(API + '/summary');
+  const res = await fetch(API + '/summary?t=' + Date.now(), { cache: 'no-store' });
   if (!res.ok) throw new Error('Request failed (' + res.status + ')');
   return res.json();
 }
