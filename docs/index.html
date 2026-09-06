@@ -94,6 +94,13 @@
 
   <div id="errorBox"></div>
 
+  <p class="layout-note" style="font-size:13px;color:var(--muted);background:var(--surface-2,#F8FAFB);
+     border:1px solid var(--line);border-radius:6px;padding:10px 13px;margin:0 0 18px">
+    Sidebar order changed on 6 September 2026. The 39 clicks recorded before that
+    sit under the previous arrangement, where B was sixth and C was at the top.
+    Totals below mix the two, so compare periods rather than slot against slot.
+  </p>
+
   <div class="cards" id="cards"></div>
 
   <section>
@@ -114,12 +121,14 @@ const API = 'https://archive-ad-clicks.worldopenwater.workers.dev';
 const SLOTS = ['a','b','c','d','e','f'];
 const OFFER_LABELS = { reading_risk: 'Reading Risk', marathon_swimming: 'Marathon Swimming' };
 const SLOT_OFFER = { a:'reading_risk', b:'reading_risk', c:'reading_risk', d:'marathon_swimming', e:'marathon_swimming', f:'reading_risk' };
+// Positions as of the 2026-09-06 rearrangement. Counts collected before that
+// date were under a different sidebar order, see the note below the header.
 const SLOT_PLACEMENT = {
   a: 'In article, directly under the headline',
-  b: 'Sidebar, 6th block down',
-  c: 'Sidebar, top',
+  b: 'Sidebar, top',
+  c: 'Sidebar, 3rd block down',
   d: 'Mid-article, roughly halfway through',
-  e: 'Sidebar, 3rd block down',
+  e: 'Sidebar, 5th block down',
   f: 'After the article body'
 };
 
