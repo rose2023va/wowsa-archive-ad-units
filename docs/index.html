@@ -94,13 +94,6 @@
 
   <div id="errorBox"></div>
 
-  <p class="layout-note" style="font-size:13px;color:var(--muted);background:var(--surface-2,#F8FAFB);
-     border:1px solid var(--line);border-radius:6px;padding:10px 13px;margin:0 0 18px">
-    Sidebar order changed on 6 September 2026. The 39 clicks recorded before that
-    sit under the previous arrangement, where B was sixth and C was at the top.
-    Totals below mix the two, so compare periods rather than slot against slot.
-  </p>
-
   <div class="cards" id="cards"></div>
 
   <section>
@@ -113,6 +106,18 @@
     <div class="bars" id="dayBars"></div>
   </section>
 
+  <section>
+    <h2>Recent clicks</h2>
+    <div class="tblwrap">
+      <table>
+        <thead>
+          <tr><th>When</th><th>Slot</th><th>Offer</th><th>Clicked from</th></tr>
+        </thead>
+        <tbody id="recentBody"></tbody>
+      </table>
+    </div>
+  </section>
+
 </div>
 
 <script>
@@ -121,8 +126,6 @@ const API = 'https://archive-ad-clicks.worldopenwater.workers.dev';
 const SLOTS = ['a','b','c','d','e','f'];
 const OFFER_LABELS = { reading_risk: 'Reading Risk', marathon_swimming: 'Marathon Swimming' };
 const SLOT_OFFER = { a:'reading_risk', b:'reading_risk', c:'reading_risk', d:'marathon_swimming', e:'marathon_swimming', f:'reading_risk' };
-// Positions as of the 2026-09-06 rearrangement. Counts collected before that
-// date were under a different sidebar order, see the note below the header.
 const SLOT_PLACEMENT = {
   a: 'In article, directly under the headline',
   b: 'Sidebar, top',
@@ -131,6 +134,21 @@ const SLOT_PLACEMENT = {
   e: 'Sidebar, 5th block down',
   f: 'After the article body'
 };
+
+function fmtWhen(iso) {
+  const d = new Date(iso);
+  return d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) + ', ' +
+    d.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' });
+}
+
+function shortenUrl(u) {
+  try {
+    const url = new URL(u);
+    return url.pathname + url.search;
+  } catch (e) {
+    return u;
+  }
+}
 
 function timeAgo(iso) {
   const s = Math.floor((Date.now() - new Date(iso).getTime()) / 1000);
@@ -142,10 +160,15 @@ function timeAgo(iso) {
 
 // Reads aggregate counts from the tracking Worker. The endpoint returns totals
 // only, never individual rows, so no referrer is ever served publicly.
-async function fetchSummary() {
-  const res = await fetch(API + '/summary?t=' + Date.now(), { cache: 'no-store' });
+async function getJSON(path) {
+  const res = await fetch(API + path + '?t=' + Date.now(), { cache: 'no-store' });
   if (!res.ok) throw new Error('Request failed (' + res.status + ')');
   return res.json();
+}
+
+async function fetchSummary() {
+  const [summary, recent] = await Promise.all([getJSON('/summary'), getJSON('/recent')]);
+  return { ...summary, recent: recent.recent };
 }
 
 function render(summary) {
@@ -199,6 +222,18 @@ function render(summary) {
       </div>
     `).join('');
 
+  const rows = summary.recent || [];
+  const recentBody = document.getElementById('recentBody');
+  recentBody.innerHTML = rows.length === 0
+    ? `<tr><td colspan="4" class="empty">No clicks recorded yet.</td></tr>`
+    : rows.map(r => `
+      <tr>
+        <td>${fmtWhen(r.clicked_at)}</td>
+        <td><span class="tag">${(r.slot || '?').toUpperCase()}</span></td>
+        <td>${OFFER_LABELS[r.offer] || r.offer || '&mdash;'}</td>
+        <td>${r.page_url ? escapeHtml(shortenUrl(r.page_url)) : '&mdash;'}</td>
+      </tr>
+    `).join('');
 }
 
 function escapeHtml(s) {
